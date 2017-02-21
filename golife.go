@@ -38,16 +38,6 @@ func (c *cell) updateValue() {
 		return
 	}
 
-	/*
-		// Initialize the neighbor count lookup.
-		neighborCounts := map[cellState]int{
-			cellRock:     0,
-			cellFood:     0,
-			cellEmpty:    0,
-			currentState: 0,
-		}
-	*/
-
 	foodCount := 0
 	liveNeighbors := 0
 	maxSpecies := 0
