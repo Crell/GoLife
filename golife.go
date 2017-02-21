@@ -13,8 +13,12 @@ type cell struct {
 
 type cellState string
 
-func (c cell) String() string {
-	return fmt.Sprintf("%q", c.state)
+func (c *cell) String() string {
+	return fmt.Sprintf("%s", string(c.state))
+}
+
+func (cs cellState) String() string {
+	return string(cs)
 }
 
 const (
