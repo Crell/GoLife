@@ -24,7 +24,7 @@ var cellTests = []cellTest{
 
 func TestCellUpdateValue(t *testing.T) {
 
-	for _, tt := range cellTests {
+	for iteration, tt := range cellTests {
 		neighbors := make([]*cell, len(tt.neighbors))
 		for i, state := range tt.neighbors {
 			neighbors[i] = &cell{state: state}
@@ -38,7 +38,7 @@ func TestCellUpdateValue(t *testing.T) {
 		c.updateValue()
 
 		if tt.expected != c.state {
-			t.Errorf("Expected %s, got %s", tt.expected, c.state)
+			t.Errorf("Iteration %d: Expected %s, got %s", iteration, tt.expected, c.state)
 		}
 	}
 }
