@@ -30,6 +30,7 @@ func TestCellUpdateValue(t *testing.T) {
 			neighbors[i] = &cell{state: state}
 		}
 		c := &cell{
+			state:      cellEmpty,
 			mirrorCell: &cell{state: tt.start},
 			neighbors:  neighbors,
 		}
