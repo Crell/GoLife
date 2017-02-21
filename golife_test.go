@@ -6,28 +6,32 @@ import (
 
 type cellTest struct {
 	start     cellState
-	neighbors []*cell
+	neighbors []cellState
 	expected  cellState
 }
 
 var cellTests = []cellTest{
-	// Empty, 1 neighbor
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellEmpty}}, expected: cellEmpty},
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellState("1")}}, expected: cellEmpty},
-	// Empty, 2 neighbors
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellEmpty}, &cell{state: cellState("1")}}, expected: cellEmpty},
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellState("1")}, &cell{state: cellState("1")}}, expected: cellEmpty},
-	// Empty, 3 neighbors
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellState("1")}, &cell{state: cellState("1")}, &cell{state: cellState("1")}}, expected: cellState("1")},
-	{start: cellEmpty, neighbors: []*cell{&cell{state: cellState("1")}, &cell{state: cellState("1")}, &cell{state: cellFood}}, expected: cellState("1")},
+	// Empty, 1 neighbor.
+	{start: cellEmpty, neighbors: []cellState{cellEmpty}, expected: cellEmpty},
+	{start: cellEmpty, neighbors: []cellState{cellState("1")}, expected: cellEmpty},
+	// Empty, 2 neighbors.
+	{start: cellEmpty, neighbors: []cellState{cellEmpty, cellState("1")}, expected: cellEmpty},
+	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1")}, expected: cellEmpty},
+	// Empty, 3 neighbors.
+	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellState("1")}, expected: cellState("1")},
+	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellFood}, expected: cellState("1")},
 }
 
 func TestCellUpdateValue(t *testing.T) {
 
 	for _, tt := range cellTests {
+		neighbors := make([]*cell, len(tt.neighbors))
+		for i, state := range tt.neighbors {
+			neighbors[i] = &cell{state: state}
+		}
 		c := &cell{
 			mirrorCell: &cell{state: tt.start},
-			neighbors:  tt.neighbors,
+			neighbors:  neighbors,
 		}
 
 		c.updateValue()
