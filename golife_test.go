@@ -10,24 +10,29 @@ type cellTest struct {
 	expected  cellState
 }
 
+const (
+	cellPlayer = cellState("1")
+	cellEnemy = cellState("2")
+)
+
 var cellTests = []cellTest{
 	// Empty, 1 neighbor.
 	{start: cellEmpty, neighbors: []cellState{cellEmpty}, expected: cellEmpty},
-	{start: cellEmpty, neighbors: []cellState{cellState("1")}, expected: cellEmpty},
+	{start: cellEmpty, neighbors: []cellState{cellPlayer}, expected: cellEmpty},
 	// Empty, 2 neighbors.
-	{start: cellEmpty, neighbors: []cellState{cellEmpty, cellState("1")}, expected: cellEmpty},
-	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1")}, expected: cellEmpty},
+	{start: cellEmpty, neighbors: []cellState{cellEmpty, cellPlayer}, expected: cellEmpty},
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer}, expected: cellEmpty},
 	// Empty, 3 neighbors.
-	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellState("1")}, expected: cellState("1")},
-	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellFood}, expected: cellState("1")},
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer}, expected: cellPlayer},
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer, cellFood}, expected: cellPlayer},
 	// Empty, 4 neighbors.
-	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellState("1"), cellEmpty}, expected: cellState("1")}, // Born from 3 neighbors.
-	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("2"), cellState("1"), cellRock}, expected: cellEmpty},       // Hostile neighbor prevents birth.
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellEmpty}, expected: cellPlayer}, // Born from 3 neighbors.
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellEnemy, cellPlayer, cellRock}, expected: cellEmpty},       // Hostile neighbor prevents birth.
 	// Living, 1 neighbor.
-	{start: cellState("1"), neighbors: []cellState{cellState("1")}, expected: cellEmpty},
+	{start: cellPlayer, neighbors: []cellState{cellPlayer}, expected: cellEmpty},
 	// Living, 2 neighbors.
-	{start: cellState("1"), neighbors: []cellState{cellState("1"), cellState("1")}, expected: cellState("1")},
-	{start: cellState("1"), neighbors: []cellState{cellState("1"), cellFood}, expected: cellState("1")},
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer}, expected: cellPlayer},
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellFood}, expected: cellPlayer},
 
 }
 
@@ -61,8 +66,8 @@ func TestPlayerDetection(t *testing.T) {
 		{cellEmpty, false},
 		{cellFood, false},
 		{cellRock, false},
-		{cellState("1"), true},
-		{cellState("2"), true},
+		{cellPlayer, true},
+		{cellEnemy, true},
 	}
 
 	for _, tt := range tests {
