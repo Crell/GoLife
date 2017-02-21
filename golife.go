@@ -62,7 +62,7 @@ func (c *cell) updateValue() {
 
 	if currentState == cellEmpty && liveNeighbors >= 1 && liveNeighbors <= 4 && maxSpecies+foodCount >= 3 {
 		c.state = candidateSpecies
-	} else if c.isPlayer() && (liveNeighbors >= 4 || maxSpecies+foodCount < 2) {
+	} else if currentState.isPlayer() && (liveNeighbors >= 4 || maxSpecies+foodCount < 2) {
 		c.state = cellEmpty
 	} else {
 		c.state = currentState
@@ -70,6 +70,10 @@ func (c *cell) updateValue() {
 }
 
 func (c *cell) isPlayer() bool {
-	_, err := strconv.ParseInt(string(c.state), 10, 8)
+	return c.state.isPlayer()
+}
+
+func (cs cellState) isPlayer() bool {
+	_, err := strconv.ParseInt(string(cs), 10, 8)
 	return err == nil
 }

@@ -20,6 +20,15 @@ var cellTests = []cellTest{
 	// Empty, 3 neighbors.
 	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellState("1")}, expected: cellState("1")},
 	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellFood}, expected: cellState("1")},
+	// Empty, 4 neighbors.
+	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("1"), cellState("1"), cellEmpty}, expected: cellState("1")}, // Born from 3 neighbors.
+	{start: cellEmpty, neighbors: []cellState{cellState("1"), cellState("2"), cellState("1"), cellRock}, expected: cellEmpty},       // Hostile neighbor prevents birth.
+	// Living, 1 neighbor.
+	{start: cellState("1"), neighbors: []cellState{cellState("1")}, expected: cellEmpty},
+	// Living, 2 neighbors.
+	{start: cellState("1"), neighbors: []cellState{cellState("1"), cellState("1")}, expected: cellState("1")},
+	{start: cellState("1"), neighbors: []cellState{cellState("1"), cellFood}, expected: cellState("1")},
+
 }
 
 func TestCellUpdateValue(t *testing.T) {
