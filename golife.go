@@ -28,41 +28,54 @@ func (c *cell) updateValue() {
 	// determines whether we may die or be born.
 	currentState := c.mirrorCell.state
 
-	// Rocks and food never change
+	// Rocks and food never change.
 	if currentState == cellRock || currentState == cellFood {
 		c.state = currentState
 		return
 	}
 
-	// Initialize the neighbor count lookup.
-	neighborCounts := map[cellState]int{
-		cellRock:     0,
-		cellFood:     0,
-		cellEmpty:    0,
-		currentState: 0,
-	}
+	/*
+		// Initialize the neighbor count lookup.
+		neighborCounts := map[cellState]int{
+			cellRock:     0,
+			cellFood:     0,
+			cellEmpty:    0,
+			currentState: 0,
+		}
+	*/
+
+	foodCount := 0
+	liveNeighbors := 0
+	maxSpecies := 0
+	var candidateSpecies cellState
+	var speciesCounts = make(map[cellState]int)
 
 	for _, neighbor := range c.neighbors {
 		if neighbor.state == cellFood {
-
+			foodCount++
+		} else if neighbor.isPlayer() {
+			if _, ok := speciesCounts[neighbor.state]; !ok {
+				speciesCounts[neighbor.state] = 0
+			}
+			speciesCounts[neighbor.state]++
+			liveNeighbors++
+			if speciesCounts[neighbor.state] > maxSpecies {
+				maxSpecies = speciesCounts[neighbor.state]
+				candidateSpecies = neighbor.state
+			}
 		}
-		neighborCounts[neighbor.state]++
 	}
 
-	var speciesCounts map[cellState]int
-	for species, count := range neighborCounts {
-		speciesCounts[species] = count
+	if currentState == cellEmpty && liveNeighbors >= 1 && liveNeighbors <= 4 && maxSpecies+foodCount >= 3 {
+		c.state = candidateSpecies
+	} else if c.isPlayer() && (liveNeighbors >= 4 || maxSpecies+foodCount < 2) {
+		c.state = cellEmpty
+	} else {
+		c.state = currentState
 	}
-
-	if currentState == cellEmpty {
-
-	}
-
-	c.state = currentState
-
 }
 
-func (cs cellState) isPlayer() bool {
-	_, err := strconv.ParseInt(string(cs), 10, 8)
+func (c *cell) isPlayer() bool {
+	_, err := strconv.ParseInt(string(c.state), 10, 8)
 	return err == nil
 }
