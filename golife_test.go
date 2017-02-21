@@ -12,7 +12,7 @@ type cellTest struct {
 
 const (
 	cellPlayer = cellState("1")
-	cellEnemy = cellState("2")
+	cellEnemy  = cellState("2")
 )
 
 var cellTests = []cellTest{
@@ -27,13 +27,25 @@ var cellTests = []cellTest{
 	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer, cellFood}, expected: cellPlayer},
 	// Empty, 4 neighbors.
 	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellEmpty}, expected: cellPlayer}, // Born from 3 neighbors.
-	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellEnemy, cellPlayer, cellRock}, expected: cellEmpty},       // Hostile neighbor prevents birth.
+	{start: cellEmpty, neighbors: []cellState{cellPlayer, cellEnemy, cellPlayer, cellRock}, expected: cellEmpty},    // Hostile neighbor prevents birth.
 	// Living, 1 neighbor.
 	{start: cellPlayer, neighbors: []cellState{cellPlayer}, expected: cellEmpty},
 	// Living, 2 neighbors.
 	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer}, expected: cellPlayer},
 	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellFood}, expected: cellPlayer},
-
+	// Living, 3 neighbors.
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer}, expected: cellPlayer},
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer, cellFood}, expected: cellPlayer},
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer, cellEnemy}, expected: cellPlayer}, // Still 2 friendly neighbors.
+	// Living, 4 neighbors.
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellPlayer}, expected: cellEmpty}, // Die from over population.
+	{start: cellPlayer, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellFood}, expected: cellPlayer},  // Food doesn't cause over-population.
+	// Rocks should always stay a rock.
+	{start: cellRock, neighbors: []cellState{}, expected: cellRock},
+	{start: cellRock, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellRock}, expected: cellRock},
+	// Food should always stay food.
+	{start: cellFood, neighbors: []cellState{}, expected: cellFood},
+	{start: cellFood, neighbors: []cellState{cellPlayer, cellPlayer, cellPlayer, cellRock}, expected: cellFood},
 }
 
 func TestCellUpdateValue(t *testing.T) {
