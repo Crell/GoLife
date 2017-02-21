@@ -6,9 +6,9 @@ import (
 )
 
 type cell struct {
-	state cellState
+	state      cellState
 	mirrorCell *cell
-	neighbors []*cell
+	neighbors  []*cell
 }
 
 type cellState string
@@ -19,8 +19,8 @@ func (c cell) String() string {
 
 const (
 	cellEmpty cellState = cellState("E")
-	cellFood = cellState("F")
-	cellRock = cellState("R")
+	cellFood            = cellState("F")
+	cellRock            = cellState("R")
 )
 
 func (c *cell) updateValue() {
@@ -34,6 +34,25 @@ func (c *cell) updateValue() {
 		return
 	}
 
+	// Initialize the neighbor count lookup.
+	neighborCounts := map[cellState]int{
+		cellRock:     0,
+		cellFood:     0,
+		cellEmpty:    0,
+		currentState: 0,
+	}
+
+	for _, neighbor := range c.neighbors {
+		if neighbor.state == cellFood {
+
+		}
+		neighborCounts[neighbor.state]++
+	}
+
+	var speciesCounts map[cellState]int
+	for species, count := range neighborCounts {
+		speciesCounts[species] = count
+	}
 
 	if currentState == cellEmpty {
 
@@ -43,7 +62,7 @@ func (c *cell) updateValue() {
 
 }
 
-func (c *cell) isPlayer() bool {
-	_, err := strconv.ParseInt(string(c.state), 10, 8)
+func (cs cellState) isPlayer() bool {
+	_, err := strconv.ParseInt(string(cs), 10, 8)
 	return err == nil
 }
