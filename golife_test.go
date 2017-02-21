@@ -53,7 +53,7 @@ func TestPlayerDetection(t *testing.T) {
 		{cellFood, false},
 		{cellRock, false},
 		{cellState("1"), true},
-		{cellState("0"), true},
+		{cellState("2"), true},
 	}
 
 	for _, tt := range tests {
